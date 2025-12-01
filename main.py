@@ -45,9 +45,9 @@ def main():
         elif choice == "4":
             t_num = int(input("Table Number for Order: "))
             current_order = None
-            for o in order_list:
-                if o['table_number'] == t_num and o['status'] == 'open':
-                    current_order = o
+            for i in order_list:
+                if i['table_number'] == t_num and i['status'] == 'open':
+                    current_order = i
                     break
             
             if not current_order:
@@ -65,9 +65,9 @@ def main():
         elif choice == "5":
             t_num = int(input("Table Number to Bill: "))
             found = False
-            for o in order_list:
-                if o['table_number'] == t_num and o['status'] == 'open':
-                    bill = orders.calculate_bill(o, 0.10, 0.15)
+            for i in order_list:
+                if i['table_number'] == t_num and i['status'] == 'open':
+                    bill = orders.calculate_bill(i, 0.10, 0.15)
                     print(f"Subtotal: ${bill['subtotal']}")
                     print(f"Tax: ${bill['tax']}")
                     print(f"Tip: ${bill['tip']}")
@@ -81,7 +81,6 @@ def main():
             storage.save_state(DATA_DIR, table_list, menu_data, order_list)
             print("Data saved. Goodbye.")
             break
-            
         else:
             print("Invalid option.")
 
