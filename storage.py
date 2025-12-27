@@ -4,32 +4,23 @@ import shutil
 import datetime
 
 def load_state(data_dir: str) -> tuple[list, dict, list]:
-    tables = []
-    menu = {}
-    orders = []
+    table_file= os.path.joşn(data_dir,"tables.json") 
+    menu_file = os.path.join(data_dir,"menu.json")
+    orders_file = os.path.join(data_dir,"orders.json")
 
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
 
-    try:
-        with open(f"{data_dir}/tables.json", 'r') as f:
-            tables = json.load(f)
-    except:
-        pass
-
-    try:
-        with open(f"{data_dir}/menu.json", 'r') as f:
-            menu = json.load(f)
-    except:
-        pass
-
-    try:
-        with open(f"{data_dir}/orders.json", 'r') as f:
-            orders = json.load(f)
-    except:
-        pass
-
-    return tables, menu, orders
+    with open(table_file, 'r') as f:
+        table_list = json.load(f)
+    
+    with open(menu_file, 'r') as f:
+        menu_data = json.load(f)
+    
+    with open(orders_file, 'r') as f:
+        order_list = json.load(f)
+    
+    return table_list, menu_data, order_list
 
 def save_state(data_dir: str, tables: list, menu: dict, orders: list) -> None:
     if not os.path.exists(data_dir):
