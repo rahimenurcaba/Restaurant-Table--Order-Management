@@ -1,43 +1,280 @@
 {
-  "starters": [
+  "soups": [
+    { 
+        "id":"SO1",
+        "name": "Lentil Soup",
+        "price": 8.50,
+        "available":true},
+        
+    { 
+        "id":"SO2",
+        "name":"Tomato Soup",
+        "price": 9.00,
+        "available":true},
+        
     {
-        "id": "S1", 
-        "name": "Spring Rolls", 
-        "price": 8.99, 
-        "available": true},
-
+        "id":"SO3",
+        "name": "Mushroom Soup",
+        "price":9.99,
+        "available":true},
+        
     {
-        "id": "S2", 
-        "name": "Garlic Bread", 
-        "price": 5.99, 
-        "available": true}
+        "id": "SO4",
+        "name": "Yayla Soup",
+        "price":8.00,
+        "available":true},
+        
+    {
+        "id": "SO5",
+        "name":Minestrone Soup",
+        "price":9.50,
+        "available":false},
+        
+    {
+        "id": "SO6",
+        "name":French Onion Soup",
+        "price":11.50,
+        "available":true},
+    {
+        "id":"SO7",
+        "name":"Ezogelin Soup",
+        "price":8.50,
+        "available":true},
+        
+    {
+        "id":"SO8",
+        "name":Beyran Soup",
+        "price":9.00,
+        "available":false},
+        
+    {
+        "id":"SO9",
+        "name":Chicken Noodle Soup",
+        "price":10.00,
+        "available":true},
+        
+    {
+        "id":"SO10",
+        "name":Pumpkin Ginger Soup",
+        "price":10.50,
+        "available":true}
+    
   ],
 
+  "starters": [
+    {
+      "id":"S1",
+      "name": "Mixed Meze Platter",
+      "price": 18.00,
+      "available": true},
+    {
+        "id": "S2", 
+        "name": "Hummus with Pastirma",
+        "price": 12.50,
+        "available": true},
+    {
+         "id": "S3",
+         "name": "Crispy Calamari",
+         "price": 15.99,
+         "available": true},
+
+    {
+        "id": "S4",
+        "name": "Stuffed Vine Leaves",
+        "price":11.00,
+        "available":true},
+        
+    {
+        "id": "S5",
+        "name": "Crispy Lahmacun",
+        "price":13.50,
+        "available": true},
+        
+    {
+        "id":"S6",
+        "name": "Fried Kibbeh",
+        "price": 13.00,
+        "available": true},
+        
+    {
+        "id": "S7",
+        "name": "Buffalo Wings",
+        "price": 14.50,
+        "available": true},
+    {
+      "id": "S8",
+      "name": "Haydari Dip",
+      "price": 8.00,
+      "available": true},
+      
+    {
+      "id": "S9",
+      "name": "Shrimp Cocktail",
+      "price": 17.00,
+      "available": true},
+      
+    {
+      "id": "S10",
+      "name": "Cheese Borek",
+      "price": 10.50,
+      "available": true}
+  ],
   "mains": [
     {
         "id": "M1", 
         "name": "Steak Frites", 
         "price": 24.99, 
         "available": true},
-
     {
         "id": "M2", 
         "name": "Veggie Burger", 
         "price": 15.99, 
-        "available": true}
+        "available": true},
+    {
+       "id":"M3",
+       "name": "Adana Kebab Plate",
+       "price": 24.99,
+       "vailable":false},
+    {
+      "id": "M4",
+      "name":"Traditional Iskender Kebab",
+      "price":28.50,
+      "available":true},
+    {
+      "id":"M5",
+      "name":"Turkish Mantı",
+      "price":21.00,
+      "available":true},
+    { 
+      "id":"M6",
+      "name":"Eggplant Karnıyarık",
+      "price":19.99,
+      "available":true},
+    {
+      "id":"M7",
+      "name":"Grilled Samon & Asparagus",
+      "price": 26.50,
+      "available": true},
+    {
+      "id":"M8",
+      "name":"Mushroom Risotto",
+      "price":19.50,
+      "available":false},
+    {
+       "id": "M9",
+       "name": "Turkish Manti",
+       "price": 21.00,
+       "available": true},
+    {
+      "id": "M10",
+      "name": "Chicken Shish",
+      "price": 22.50,
+      "available": true}
   ],
 
   "desserts": [
     {
-        "id": "D1", 
-        "name": "Lava Cake", 
-        "price": 9.99, 
-        "available": false},
+      "id": "D1",
+      "name": "Pistachio Baklava",
+      "price": 12.00,
+      "available": true},
     {
-        "id:": "D2",
-        "name": "Red Velvet Cake",
-        "price": 10.99,
-        "available": true}
-    
+      "id": "D2",
+      "name": "Kunefe",
+      "price": 14.50,
+      "available": true},
+    {
+      "id": "D3",
+      "name": "Tiramisu",
+      "price": 10.00,
+      "available": true},
+    {
+      "id": "D4",
+      "name": "New York Cheesecake",
+      "price": 11.00,
+      "available": true},
+    {
+      "id": "D5",
+      "name": "Chocolate Lava Cake",
+      "price": 10.50,
+      "available": true},
+    {
+      "id": "D6",
+      "name": "Sutlac (Rice Pudding)",
+      "price": 8.50,
+      "available": true},
+    {
+      "id": "D7",
+      "name": "Profiteroles",
+      "price": 9.50,
+      "available": true},
+    {
+      "id": "D8",
+      "name": "Pumpkin Dessert",
+      "price": 11.00,
+      "available": true},
+    {
+      "id": "D9",
+      "name": "Apple Tart",
+      "price": 9.00,
+      "available": true},
+    {
+      "id": "D10",
+      "name": "Turkish Delight",
+      "price": 7.50,
+      "available": true}
+  ],
+   "drinks": [
+    {
+      "id": "DR1",
+      "name": "Turkish Coffee",
+      "price": 5.50,
+      "available": true},
+    {
+      "id": "DR2",
+      "name": "Fresh Orange Juice",
+      "price": 6.50,
+      "available": true},
+    {
+      "id": "DR3",
+      "name": "Homemade Ayran",
+      "price": 4.50,
+      "available": true},
+    {
+      "id": "DR4",
+      "name": "Iced Latte",
+      "price": 6.00,
+      "available": true},
+    {
+      "id": "DR5",
+      "name": "Coca Cola",
+      "price": 3.50,
+      "available": true},
+    {
+      "id": "DR6",
+      "name": "Mineral Water",
+      "price": 4.00,
+      "available": true},
+    {
+      "id": "DR7",
+      "name": "Turkish Tea",
+      "price": 3.00,
+      "available": true},
+    {
+      "id": "DR8",
+      "name": "Mint Lemonade",
+      "price": 5.50,
+      "available": true},
+    {
+      "id": "DR9",
+      "name": "House Red Wine",
+      "price": 12.00,
+      "available": true},
+    {
+      "id": "DR10",
+      "name": "Draft Beer",
+      "price": 9.00,
+      "available": true}
   ]
 }
+
