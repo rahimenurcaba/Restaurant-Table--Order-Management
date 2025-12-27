@@ -4,15 +4,21 @@ import shutil
 import datetime
 
 def load_state(data_dir: str) -> tuple[list, dict, list]:
-    table_file= os.path.joşn(data_dir,"tables.json") 
+    table_file= os.path.join(data_dir,"tables.json") 
     menu_file = os.path.join(data_dir,"menu.json")
     orders_file = os.path.join(data_dir,"orders.json")
 
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
-
-    with open(table_file, 'r') as f:
-        table_list = json.load(f)
+   try:
+       with open(table_file, 'r') as f:
+           table_list = json.load(f)
+    except FileNotFoundError:
+        print(f"Error: {table_file} not found.")
+        table_list = []  
+    except json.JSONDecodeError:
+        print(f"Error: {table_file} contains invalid JSON.")
+        table_list = []  
     
     with open(menu_file, 'r') as f:
         menu_data = json.load(f)
