@@ -28,6 +28,7 @@ def main():
         print("5. Calculate Bill")
         print("6. Manager Tools (Reports & Backup)")
         print("7. Save & Exit")
+        print("8. Menu Management")
         
         choice = input("Select option: ")
 
@@ -120,6 +121,24 @@ def main():
             storage.save_state(DATA_DIR, table_list, menu_data, order_list)
             print("Data saved. Goodbye.")
             break
+            
+        elif choice == "8":
+            print(\n--- Menu Management ---")
+            print("1. Add item")
+            print("2. Update item")
+            m_choice= inout("Select: ")
+            if m_choice=="1":
+                name=input("İrem Name:")
+                price=float(input("Price:")
+                cat=input("Category")
+                new_item={
+                    "category":cat,
+                    "name":name,
+                    "price":price,
+                    "available": true}
+                menu.add_menu_item(menu_data,new_item)
+                print("Item added.")
+                
         else:
             print("Invalid option.")
             
