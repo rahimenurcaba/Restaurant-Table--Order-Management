@@ -26,13 +26,13 @@
         
     {
         "id": "SO5",
-        "name":Minestrone Soup",
+        "name": "Minestrone Soup",
         "price":9.50,
         "available":false},
         
     {
         "id": "SO6",
-        "name":French Onion Soup",
+        "name":"French Onion Soup",
         "price":11.50,
         "available":true},
     {
@@ -43,19 +43,19 @@
         
     {
         "id":"SO8",
-        "name":Beyran Soup",
+        "name":"Beyran Soup",
         "price":9.00,
         "available":false},
         
     {
         "id":"SO9",
-        "name":Chicken Noodle Soup",
+        "name":"Chicken Noodle Soup",
         "price":10.00,
         "available":true},
         
     {
         "id":"SO10",
-        "name":Pumpkin Ginger Soup",
+        "name":"Pumpkin Ginger Soup",
         "price":10.50,
         "available":true}
     
