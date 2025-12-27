@@ -72,7 +72,7 @@ def main():
                 if i['table_number'] == t_num and i['status'] == 'open':
                     current_order = i
                     break
-            
+    
             if not current_order:
                 print(f"Error: No open error found for table {t_num}. seat the table first (Option 2).")
                 continue
@@ -83,7 +83,7 @@ def main():
             temp_item = {"id": item_name[:3].upper(), "name": item_name, "price": price}
             orders.add_item_to_order(current_order, temp_item, qty)
             print(f"Item added to table {t_num}.")
-            result= storage.log_kitchen_tickrt(current_order, LOGS_DIR)
+            result= storage.log_kitchen_ticket(current_order, LOGS_DIR)
             print(f"Kitchen order ticket generated. ({result})")
 
         elif choice == "5":
@@ -107,7 +107,7 @@ def main():
                 if confirm_close == 'y':
                     current_order['status'] = 'closed'
                     current_order['bill'] = bill
-                    tables.release_table(tanle_list, t_num)
+                    tables.release_table(table_list, t_num)
                     print(f"Order for table {t_num} closed and table released.")
                 
                 else:
@@ -137,7 +137,7 @@ def manager_tools(order_list,menu_data):
     mgr_choice = input("Select report option:")
     
     if mgr_choice == "1":
-        report_data = reports.daily_sales_report(closee_orders)
+        report_data = reports.daily_sales_report(closed_orders)
         print("\n---Daily Sales Summary ---")
         for key, value in report_data.items():
             print(f"{key.replace('_','').title()}:{value}")
