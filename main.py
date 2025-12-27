@@ -16,7 +16,7 @@ def main():
     table_list, menu_data, order_list = storage.load_state(DATA_DIR)
     if not os.path.exists(LOGS_DIR):
         os.makedirs(LOGS_DIR) 
-    if not os.path.exits(BACKUP_DIR):
+    if not os.path.exists(BACKUP_DIR):
         os.makedirs(BACKUP_DIR)
 
     while True:
@@ -36,7 +36,7 @@ def main():
             for t in table_list:
                 status.display = t['status'].ljust(15)
                 server_display = t.get('server_name','None').ljust(10)
-                print(f"Table {str(t['table_number']).ljust(3)} | Status:{status_display} | Server:{server_display")
+                print(f"Table {str(t['table_number']).ljust(3)} | Status:{status_display} | Server:{server_display}")
 
         elif choice == "2":
             t_num = int(input("Table Number: "))
@@ -47,7 +47,7 @@ def main():
                 tables.update_server(table_list, t_num, server)
                 server_name= 'Unassingned'
                 for t in table_list:
-                    if t['table_number] == t_num):
+                    if t['table_number'] == t_num:
                         server_name=t['server_name']
                         break
                 new_order = orders.open_order(t_num, server_name)
@@ -80,7 +80,7 @@ def main():
             item_name = input("Enter Menu Item Name: ")
             qty = int(input("Quantity: "))
             price = float(input("Price (Temporary): ")) 
-            temp_item = {"id": item_name[:3].upper(), "name": item_name, price": price}
+            temp_item = {"id": item_name[:3].upper(), "name": item_name, "price": price}
             orders.add_item_to_order(current_order, temp_item, qty)
             print(f"Item added to table {t_num}.")
             result= storage.log_kitchen_tickrt(current_order, LOGS_DIR)
@@ -134,11 +134,11 @@ def manager_tools(order_list,menu_data):
     print("3. Server Performance")
     print("4. Backup All Data")
     
-    mgr_choice = input("Select report option:)
+    mgr_choice = input("Select report option:")
     
     if mgr_choice == "1":
         report_data = reports.daily_sales_report(closee_orders)
-        print("\n---Daily Sales Summary ---"
+        print("\n---Daily Sales Summary ---")
         for key, value in report_data.items():
             print(f"{key.replace('_','').title()}:{value}")
     
@@ -152,8 +152,8 @@ def manager_tools(order_list,menu_data):
     if mgr_choice == "3":
         report_data = reports.server_performance(closed_orders)
         print("\n--- Server Performance ---")
-        dor server,data in report_data.items():
-        print(f"Server{server.ljust(10)} | Served:{data['tables_served']} | Total Sales:${data['total_sales']:.2f}")
+        for server_name, data in report_data.items():
+            print(f"Server{server_name.ljust(10)} | Served:{data['tables_served']} | Total Sales:${data['total_sales']:.2f}")
         
     if mgr_choice == "4":
         result=storage.backup.day(DATA_DIR, BACKUP_DIR)
@@ -163,4 +163,4 @@ def manager_tools(order_list,menu_data):
         print("Invalid manager option.")
         
 if __name__ == "__main__":
-    main()
+    main( )
