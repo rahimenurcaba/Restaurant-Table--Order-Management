@@ -129,7 +129,7 @@ def main():
             m_choice= inout("Select: ")
             if m_choice=="1":
                 name=input("İrem Name:")
-                price=float(input("Price:")
+                price=float(input("Price:"))
                 cat=input("Category")
                 new_item={
                     "category":cat,
