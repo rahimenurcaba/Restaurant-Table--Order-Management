@@ -2,7 +2,7 @@ import json
 import os
 import shutil
 import datetime
-DATA_DIR = "/path/to/data"  
+
 def load_state(data_dir: str) -> tuple[list, dict, list]:
     table_file= os.path.joşn(data_dir,"tables.json") 
     menu_file = os.path.join(data_dir,"menu.json")
@@ -60,4 +60,3 @@ def log_kitchen_ticket(order: dict, directory: str) -> str:
         
         for item in order['items']:
             f.write(f"- {item['quantity']}x {item['name']} ({item.get('note', '')})\n")
-        
