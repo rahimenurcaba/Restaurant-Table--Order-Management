@@ -2,53 +2,53 @@
     "tables": [
         {
             "table_number": 1,
-            "table_capacity": 2,
-            "table_availability": "free",
+            "capacity": 2,
+            "status": "free",
             "server_name": "Ayşe"},
         {
             "table_number": 2,
-            "table_capacity": 4,
-            "table_availability": "free",
+            "capacity": 4,
+            "status": "free",
             "server_name": "Berenice Begüm"},
         {
             "table_number": 3,
-            "table_capacity": 6,
-            "table_availability": "occupied",
+            "capacity": 6,
+            "status": "occupied",
             "server_name": "Kaya"},
         {
             "table_number": 4,
-            "table_capacity": 8,
-            "table_availability": "free",
+            "capacity": 8,
+            "status": "free",
             "server_name": "Mustafa"},
         {
             "table_number": 5,
-            "table_capacity": 2,
-            "table_availability": "occupied",
+            "capacity": 2,
+            "status": "occupied",
             "server_name": "Zeynep"},
         {
             "table_number": 6,
-            "table_capacity": 4,
-            "table_availability": "free",
+            "capacity": 4,
+            "status": "free",
             "server_name": "Mehmet"},
         {
             "table_number": 7,
-            "table_capacity": 4,
-            "table_availability": "occupied",
+            "capacity": 4,
+            "status": "occupied",
             "server_name": "Elif"},
         {
             "table_number": 8,
-            "table_capacity": 6,
-            "table_availability": "free",
+            "capacity": 6,
+            "status": "free",
             "server_name": "Burak"},
         {
             "table_number": 9,
-            "table_capacity": 2,
-            "table_availability": "free",
+            "capacity": 2,
+            "status": "free",
             "server_name": "Hande"},
         {
             "table_number": 10,
-            "table_capacity": 10,
-            "table_availability": "reserved",
+            "capacity": 10,
+            "status": "reserved",
             "server_name": "Can"}
     ]
 }
