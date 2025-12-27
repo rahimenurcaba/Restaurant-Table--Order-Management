@@ -35,17 +35,17 @@ def main():
         if choice == "1":
             print("\n---Current Tables---")
             for t in table_list:
-                status.display = t['status'].ljust(15)
+                status_display = t['status'].ljust(15)
                 server_display = t.get('server_name','None').ljust(10)
                 print(f"Table {str(t['table_number']).ljust(3)} | Status:{status_display} | Server:{server_display}")
 
         elif choice == "2":
             t_num = int(input("Table Number: "))
             p_size = int(input("Party Size: "))
-            result = table.assign_table(table_list, t_num, p_size)
+            result = tables.assign_table(table_list, t_num, p_size)
             if result:
                 server_name = input("Assign Server: ")
-                tables.update_server(table_list, t_num, server)
+                tables.update_server(table_list, t_num, server_name)
                 server_name= 'Unassingned'
                 for t in table_list:
                     if t['table_number'] == t_num:
