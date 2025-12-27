@@ -25,9 +25,9 @@ def table_capacity():
         {"table_number":1, "capacity":2,"status":"free", "server_name":"None"}
     ]
     
-    #Let's try to seat 4 people at a table eith 2 capacity.(It must be fail)
+    #Let's try to seat 4 people at a table with 2 capacity.(It must be fail)
     result=tables.assign_table(fake_table,1,4)
-    if result ==False:
+    if result is None:
         print("PASS: Correctly blocked party too large for table.")
         
 if __name__ == "__main__":
