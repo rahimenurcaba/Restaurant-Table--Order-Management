@@ -45,18 +45,15 @@ def calculate_bill(order: dict, tax_rate: float, tip_rate: float) -> dict:
         "tip": round(tip_amount, 2),
         "total": round(total, 2)
     }
-# In orders.py
 
 def split_bill(order: dict, method: str, parties: int | list) -> list:
-    # Validation
+
     if "bill" not in order:
         print("Error: Calculate bill first.")
         return []
 
-    # FIX: Retrieve values correctly from the 'bill' dictionary
     tax_rate = order["bill"]["tax_rate"]
     tip_rate = order["bill"]["tip_rate"]
-    # FIX: The key from calculate_bill is 'total', not 'total_bill'
     total_bill = order["bill"]["total"] 
 
     # Simple split (Evenly)
@@ -83,7 +80,6 @@ def split_bill(order: dict, method: str, parties: int | list) -> list:
                 
                 party_tax = party_subtotal * tax_rate
                 party_total = party_subtotal + party_tax
-                # Calculate tip share based on the party's total
                 party_tip = party_total * tip_rate
                 
                 split_bills.append({
