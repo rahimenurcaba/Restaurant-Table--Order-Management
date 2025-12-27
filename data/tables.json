@@ -1,32 +1,54 @@
 {
-    "tables":[
-     {
-        "table_number": "T1",
-        "table_capacity": "2",
-        "table_availability": "free",
-        "server_name": "Ayşe"
-     },
-
-     {
-        "table_number":"T2",
-        "table_capacity":"4",
-        "table_availability":"free",
-        "server_name": "Beren Begüm"
-     },
-
-     {
-        "table_number": "T3",
-        "table_capacity":"6",
-        "table_availability": "occupied",
-        "server_name": "Kaya"
-     },
-
-     {
-        "table_number":"T4",
-        "table_capacity": "8",
-        "table_availability": "free",
-        "server_name": "Mustafa"
-     }
+    "tables": [
+        {
+            "table_number": "T1",
+            "table_capacity": "2",
+            "table_availability": "free",
+            "server_name": "Ayşe"},
+        {
+            "table_number": "T2",
+            "table_capacity": "4",
+            "table_availability": "free",
+            "server_name": "Beren Begüm"},
+        {
+            "table_number": "T3",
+            "table_capacity": "6",
+            "table_availability": "occupied",
+            "server_name": "Kaya"},
+        {
+            "table_number": "T4",
+            "table_capacity": "8",
+            "table_availability": "free",
+            "server_name": "Mustafa"},
+        {
+            "table_number": "T5",
+            "table_capacity": "2",
+            "table_availability": "occupied",
+            "server_name": "Zeynep"},
+        {
+            "table_number": "T6",
+            "table_capacity": "4",
+            "table_availability": "free",
+            "server_name": "Mehmet"},
+        {
+            "table_number": "T7",
+            "table_capacity": "4",
+            "table_availability": "occupied",
+            "server_name": "Elif"},
+        {
+            "table_number": "T8",
+            "table_capacity": "6",
+            "table_availability": "free",
+            "server_name": "Burak"},
+        {
+            "table_number": "T9",
+            "table_capacity": "2",
+            "table_availability": "free",
+            "server_name": "Hande"},
+        {
+            "table_number": "T10",
+            "table_capacity": "10",
+            "table_availability": "reserved",
+            "server_name": "Can"}
     ]
-
 }
