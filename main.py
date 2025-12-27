@@ -42,9 +42,9 @@ def main():
         elif choice == "2":
             t_num = int(input("Table Number: "))
             p_size = int(input("Party Size: "))
-            result = tables.assign_table(table_list, t_num, p_size)
+            result = table.assign_table(table_list, t_num, p_size)
             if result:
-                server = input("Assign Server: ")
+                server_name = input("Assign Server: ")
                 tables.update_server(table_list, t_num, server)
                 server_name= 'Unassingned'
                 for t in table_list:
@@ -75,7 +75,7 @@ def main():
                     break
     
             if not current_order:
-                print(f"Error: No open error found for table {t_num}. seat the table first (Option 2).")
+                print(f"Error: No open error found for table {t_num}. Seat the table first (Option 2).")
                 continue
 
             item_name = input("Enter Menu Item Name: ")
@@ -123,7 +123,7 @@ def main():
             break
             
         elif choice == "8":
-            print(\n--- Menu Management ---")
+            print("\n--- Menu Management ---")
             print("1. Add item")
             print("2. Update item")
             m_choice= inout("Select: ")
