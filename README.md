@@ -42,7 +42,7 @@ This is the standard flow for a customer visit:
 
 1.  **View Tables (Option 1):** Check which tables are "free".
 2.  **Seat Table (Option 2):**
-    * Enter the Table Number (e.g., `T1`, `T2` - *Note: Input is case sensitive*).
+    * Enter the Table Number 
     * Enter Party Size (System checks if table capacity is sufficient).
     * Assign a Server.
 3.  **Place Order (Option 4):**
