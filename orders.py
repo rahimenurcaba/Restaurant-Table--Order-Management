@@ -45,44 +45,55 @@ def calculate_bill(order: dict, tax_rate: float, tip_rate: float) -> dict:
         "tip": round(tip_amount, 2),
         "total": round(total, 2)
     }
+# In orders.py
 
-def split_bill(order: dict, method:str, parties:int |list[int]) -> list[dict]:
+def split_bill(order: dict, method: str, parties: int | list) -> list:
+    # Validation
     if "bill" not in order:
-        print("Error: Bill must be calculated before splitting.")
-        return[]
-    tax_rate=order["bill"]["tax_rate"]
-    tip_rate=order["bill"]["tip_rate"]
-    total_bill=order["bill"]["total_bill"]
-    #Simple split (Evenly)
+        print("Error: Calculate bill first.")
+        return []
+
+    # FIX: Retrieve values correctly from the 'bill' dictionary
+    tax_rate = order["bill"]["tax_rate"]
+    tip_rate = order["bill"]["tip_rate"]
+    # FIX: The key from calculate_bill is 'total', not 'total_bill'
+    total_bill = order["bill"]["total"] 
+
+    # Simple split (Evenly)
     if method == "even":
-        if isinstance(parties, int) and parties>0:
-            total_bill = order["bill"]["total_bill"]
-            amount_per_person=total_bill/parties
-            split_bills=[]
+        if isinstance(parties, int) and parties > 0:
+            amount_per_person = total_bill / parties
+            split_bills = []
             for i in range(parties):
                 split_bills.append({
-                    "party_id": i+1,
-                    "amount_due":round(amount_per_person,2)
+                    "party_id": i + 1,
+                    "amount_due": round(amount_per_person, 2)
                 })
             return split_bills
     
-    #Itemized Split(Paying for your own food)
-    elif method =="itemized":
-        if isinstance(parties,list):
-            split_bills =[]
+    # Itemized Split (Paying for your own food)
+    elif method == "itemized":
+        if isinstance(parties, list):
+            split_bills = []
             for i, party_items_ids in enumerate(parties):
-                party_subtotal= 0.0
-                for item in order ["items"]:
-                    if item["item_id"] in party_items_ids:
-                        party_subtotal +=item["price"]* item["quantity"]
-                party_tax=party_subtotal*tax_rate
-                party_total=party_subtotal + party_tax
+                party_subtotal = 0.0
+                for item in order["items"]:                
+                    if item.get("id") in party_items_ids or item.get("name") in party_items_ids:
+                        party_subtotal += item["price"] * item["quantity"]
+                
+                party_tax = party_subtotal * tax_rate
+                party_total = party_subtotal + party_tax
+                # Calculate tip share based on the party's total
+                party_tip = party_total * tip_rate
+                
                 split_bills.append({
-                    "party_id": i+1,
-                    "subtotal":round(party_subtotal,2), 
-                    "tax_amount":round(party_tax,2),
-                    "total_bill": round(party_total,2),
-                    "suggested_tip":round(party_total*tip_rate,2)
+                    "party_id": i + 1,
+                    "subtotal": round(party_subtotal, 2),
+                    "tax_amount": round(party_tax, 2),
+                    "tip_amount": round(party_tip, 2),
+                    "total_bill": round(party_total + party_tip, 2)
                 })
             return split_bills
-        return[]
+            
+    print("Invalid split method.")
+    return []
