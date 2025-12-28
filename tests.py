@@ -18,7 +18,7 @@ def test_bill_calculation():
     if round(bill['total']) == 27.50:
         print("PASS: The system is working great.")
     else:
-        print("FAIL: Expected 27.50, got {bill['total']}")
+        print(f"FAIL: Expected 27.50, got {bill['total']}")
         
 def test_table_capacity():
     print("--- Table Capacity Testing ---")
