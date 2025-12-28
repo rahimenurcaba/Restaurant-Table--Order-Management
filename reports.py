@@ -54,8 +54,9 @@ def server_performance(orders: list) -> dict:
     for order in orders:
         if order.get("status")=="closed":
             server_name=order.get("server_name") 
-            if not server_name:continue
-            if server not in performance:
+            if not server_name:
+                continue
+            if server_name not in performance:
                 performance[server_name]= {"tables_served":0, "total_sales":0.0}
             bill = order.get("bill",{})
             total = bill.get("total", 0.0)
