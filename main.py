@@ -108,32 +108,32 @@ def main():
                 print("Error: Invalid category.")
 
         elif choice == "5":
-            t_num = int(input("Table Number to Bill: "))
-            current_order= None
-            for i in order_list:
-                if i['table_number'] == t_num and i['status'] == 'open':
-                    current_order=i
-                    break
-                if not current_order:
-                    print("No open order for this table.")
-                    continue
-                    
-                bill = orders.calculate_bill(i, 0.10, 0.15)
+            try:
+                t_num = int(input("Table Number: "))
+            except ValueError:
+                continue
+
+            current_order = next((o for o in order_list if o['table_number'] == t_num and o['status'] == 'open'), None)
+            
+            if current_order:
+                bill = orders.calculate_bill(current_order, tax_rate=0.10, tip_rate=0.10)
+                
+                print("\n--- BILL ---")
                 print(f"Subtotal: ${bill['subtotal']:.2f}")
-                print(f"Tax: ${bill['tax']:.2f}")
-                print(f"Tip: ${bill['tip']:.2f}")
-                print(f"TOTAL: ${bill['total']:.2f}")
+                print(f"Tax:      ${bill['tax']:.2f}")
+                print(f"Tip:      ${bill['tip']:.2f}")
+                print(f"TOTAL:    ${bill['total']:.2f}")
+                action = input("\nType 'pay' to close this order, or Enter to go back: ")
                 
-                confirm_close=input("\nConfirm payment reveived and close order? (y/n):").lower()
-                if confirm_close == 'y':
+                if action.lower() == 'pay':
                     current_order['status'] = 'closed'
-                    current_order['bill'] = bill
+                    current_order['bill'] = bill  
                     tables.release_table(table_list, t_num)
-                    print(f"Order for table {t_num} closed and table released.")
-                
-                else:
-                    print("Order remains open , avaiting payment.")
-                    
+                    storage.save_state(DATA_DIR, table_list, menu_data, order_list)
+                    print(f"Order for Table {t_num} closed and paid.")
+            else:
+                print("No open order for this table.")
+
         elif choice == "6":
             manager_tools(order_list,menu_data)
             
