@@ -63,13 +63,13 @@ def main():
                     if order['table_number'] == t_num and order['status'] == 'open':
                         order_to_close = order
                         break
-                if order_to_close and 'bill' not in order to close:
+                if order_to_close and 'bill' not in order_to_close:
                     confirm=input(f"Confirm releasing table {t_num}? This should only be used if the table is paid. (y/n):").lower()
                 if confirm.lower() == 'y':
                     if tables.release_table(table_list, t_num):
                         print(f"Table {t_num} released.")
                         storage.save_state(DATA_DIR, table_list, menu_data, order_list)
-                elif confirm.lower() != 'y:
+                elif confirm.lower() != 'y':
                     continue
                 else:
                     print("Table not found or already released.")
@@ -237,7 +237,7 @@ def main():
             if m_choice=="1":
                 item_id=input("Id (e.g., M1) : ")
                 exists=False
-                for cat=_items in menu_data.values():
+                for cat_items in menu_data.values():
                     for item in cat_items:
                         if item['id'] == item_id:
                             exists = True
@@ -247,7 +247,7 @@ def main():
                     continue
                 name=input("Item Name:")
                 price=float(input("Price:"))
-                cat=input("Category:a)
+                cat=input("Category:")
                 new_item={
                     "id" : item_id,
                     "category":cat,
