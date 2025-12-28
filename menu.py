@@ -12,20 +12,27 @@ def save_menu(path: str, menu: dict) -> None:
         json.dump(menu, file, indent=4)
 
 def add_menu_item(menu: dict, item: dict) -> dict:
-    item_id = str(len(menu) + 1)
-    menu[item_id] = item
+    category = item.get("category", "extras").lower()
+    
+    if category not in menu:
+        menu[category] = []
+        
+    menu[category].append(item)
     return menu
 
 def update_menu_item(menu: dict, item_id: str, updates: dict) -> dict:
-    if item_id in menu:
-        for key, value in updates.items():
-            menu[item_id][key] = value
+    for category, items_list in menu.items():
+        for item in items_list:
+            if item['id'] == item_id:
+                for key, value in updates.items():
+                    item[key] = value
+                return menu
     return menu
 
 def filter_menu(menu: dict, category: str, vegetarian: bool | None = None) -> list:
     results = []
-    for item_id, item in menu.items():
-        if item['category'] == category:
+    if category in menu:
+        for item in menu[category]:
             if vegetarian is None or item.get('vegetarian') == vegetarian:
                 results.append(item)
     return results
