@@ -20,6 +20,7 @@ LOGS_DIR = "logs"
 BACKUP_DIR = "backups"
 
 def main():
+    # Ensure storage.load_state exists and returns 3 values
     table_list, menu_data, order_list = storage.load_state(DATA_DIR)
     
     if not os.path.exists(LOGS_DIR):
@@ -49,7 +50,8 @@ def main():
                 
                 print(f"Table {str(t['table_number']).ljust(3)} | Status: {status_display} | Server: {server_display}")
 
-                elif choice == "2":
+        # FIXED INDENTATION HERE
+        elif choice == "2":
             try:
                 t_num = get_int(input("Table Number: "))
                 p_size = get_int(input("Party Size: "))
@@ -67,7 +69,6 @@ def main():
                     print("Table not available or too small.")
             except ValueError:
                 print("Invalid input.")
-
 
         elif choice == "3":
             try:
@@ -115,8 +116,10 @@ def main():
                                 print("Invalid quantity.")
                         else:
                             print("Item not found.")
-                      storage.log_kitchen_ticket(current_order, "logs") 
-                      print("Kitchen ticket sent.")                         
+                    
+                    # FIXED INDENTATION HERE
+                    storage.log_kitchen_ticket(current_order, "logs") 
+                    print("Kitchen ticket sent.")                         
             except ValueError:
                 print("Invalid Table Number.")
 
@@ -128,10 +131,12 @@ def main():
                 if order_to_close:
                     print("\n--- Bill Calculation ---")
                     print(f"Total Items: {len(order_to_close['items'])}")
-                        bill = orders.calculate_bill(order_to_close, tax_rate=0.10, tip_rate=0.10)
-                        order_to_close['bill'] = bill
-                        print(f"Total Amount: ${bill.get('total', 0):.2f}")
-                        confirm = input("Process Payment & Close Order? (y/n): ")
+                    # FIXED INDENTATION HERE
+                    bill = orders.calculate_bill(order_to_close, tax_rate=0.10, tip_rate=0.10)
+                    order_to_close['bill'] = bill
+                    print(f"Total Amount: ${bill.get('total', 0):.2f}")
+                    confirm = input("Process Payment & Close Order? (y/n): ")
+                    
                     if confirm.lower() == 'y':
                         order_to_close['status'] = 'closed'
                         storage.save_receipt(order_to_close)
