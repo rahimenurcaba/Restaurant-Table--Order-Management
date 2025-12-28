@@ -56,14 +56,17 @@ def main():
                 print("Error: Please enter valid numbers.")
 
         elif choice == "3":
-            t_num = int(input("Table number to release: "))
-            confirm=input(f"Confirm releasing table {t_num}? This should only be used if the table is paid. (y/n):").lower()
-            if confirm == 'y':
-                if tables.release_table(table_list, t_num):
-                    print(f"Table {t_num} released.")
-            else:
-                print("Table not found or already released.")
-
+            try:
+                t_num = int(input("Table number to release: "))
+                confirm=input(f"Confirm releasing table {t_num}? This should only be used if the table is paid. (y/n):").lower()
+                if confirm == 'y':
+                    if tables.release_table(table_list, t_num):
+                        print(f"Table {t_num} released.")
+                else:
+                    print("Table not found or already released.")
+            except ValueError:
+                print("Error: Please enter valid numbers.")
+                
         elif choice == "4":
             try:
                 t_num = int(input("Table Number for Order: "))
@@ -96,12 +99,15 @@ def main():
                         break
                 if selected_item:
                     try:
-                        qty = int(input("Quantity: "))
-                        orders.add_item_to_order(current_order, selected_item, qty)
-                        print(f"Item added to table {t_num}.")
-                        result = storage.log_kitchen_ticket(current_order, LOGS_DIR)
-                        print(f"Kitchen order ticket generated. ({result})")
-                        storage.save_state(DATA_DIR, table_list, menu_data, order_list)
+                        if not selected_item.get("available", True):
+                            print("Sorry, this item is currently unavailable.")
+                        else:
+                            qty = int(input("Quantity: "))
+                            orders.add_item_to_order(current_order, selected_item, qty)
+                            print(f"Item added to table {t_num}.")
+                            result = storage.log_kitchen_ticket(current_order, LOGS_DIR)
+                            print(f"Kitchen order ticket generated. ({result})")
+                            storage.save_state(DATA_DIR, table_list, menu_data, order_list)
                     except ValueError:
                         print("Invalid quantity.")
                 else:
@@ -161,7 +167,23 @@ def main():
                     "price":price,
                     "available": True}
                 menu.add_menu_item(menu_data,new_item)
-                print("Item added.")
+                print(f"Item '{name}' added with ID '{item_id}' to category '{cat}'.")
+            elif m_choice == "2":
+                item_id = input("Enter ID of item to update: ")
+                print("Leave field blank to keep current value.")
+                new_price = input("New Price: ")
+                new_avail = input("Is Available (true/false): ")
+
+                updates = {}
+                if new_price: 
+                    updates["price"] = float(new_price)
+                if new_avail: 
+                    updates["available"] = new_avail.lower() == 'true'
+
+                if updates:
+                    menu.update_menu_item(menu_data, item_id, updates)
+                    print("Item updated.")
+
                 
         else:
             print("Invalid option.")
