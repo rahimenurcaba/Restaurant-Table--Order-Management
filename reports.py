@@ -3,10 +3,10 @@ import operator
 import datetime
 
 def daily_sales_report(orders: list) -> dict:
+    completed_orders=0
     total_revenue = 0.0
     today = datetime.date.today().isoformat() 
     for order in orders:
-    
         if order.get("status") == "closed" and order.get("date") == today: 
             if "bill" in order:
                 bill =order["bill"]
