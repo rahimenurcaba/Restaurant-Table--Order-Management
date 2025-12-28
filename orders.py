@@ -8,6 +8,7 @@ def open_order(table_number: int) -> dict:
 
 def add_item_to_order(order: dict, menu_item: dict, quantity: int, note: str = "") -> dict:
     item_entry = {
+        "id": menu_item.get("id", "unknown"),
         "name": menu_item["name"],
         "price": menu_item["price"],
         "quantity": quantity,
