@@ -3,9 +3,13 @@ import json
 def initialize_tables(path: str) -> list:
     try:
         with open(path, 'r') as file:
-            return json.load(file)
+            table_data = json.load(file)
+            if isinstance(table_data, dict) and "tables" in table_data:
+                return table_data["tables"]
+            return table_data
     except FileNotFoundError:
         return []
+
 
 def add_table(tables: list, table_data: dict) -> list:
     tables.append(table_data)
