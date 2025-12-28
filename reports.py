@@ -41,7 +41,9 @@ def top_selling_items(orders: list, menu: dict, limit: int = 5) -> list:
             for item_data in menu[category_name]:
                 if item_data.get("id") == item_id:
                     item_name = item_data.get("name")
+                    found = True
                     break
+            if found: break
         top_items.append({"name": item_name, "quantity_sold": count})
     return top_items
 
@@ -59,7 +61,7 @@ def server_performance(orders: list) -> dict:
             bill = order.get("bill",{})
             total = bill.get("final_total", 0.0)
             performance[server_name]["tables_served"] +=1
-            performance[server_name]["total sales"] += total
+            performance[server_name]["total_sales"] += total
             
     for server_name,data in performance.items():
             data["total_sales"]=round(data["total_sales"],2)
