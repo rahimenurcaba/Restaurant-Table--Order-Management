@@ -134,7 +134,7 @@
        "id":"M3",
        "name": "Adana Kebab Plate",
        "price": 24.99,
-       "vailable":false},
+       "available":false},
     {
       "id": "M4",
       "name":"Traditional Iskender Kebab",
