@@ -1,15 +1,18 @@
 import csv
 import operator
+import datetime
 
 def daily_sales_report(orders: list) -> dict:
-    total_revenue= 0.0
-    completed_orders= 0
+    total_revenue = 0.0
+    today = datetime.date.today().isoformat() 
     for order in orders:
-        if order.get("status")=="closed" and "bill" in order:
-            bill =order["bill"]
-            final_total=bill.get("total",0.0)
-            total_revenue += final_total
-            completed_orders +=1
+    
+        if order.get("status") == "closed" and order.get("date") == today: 
+            if "bill" in order:
+                bill =order["bill"]
+                final_total=bill.get("total",0.0)
+                total_revenue += final_total
+                completed_orders +=1
     return{
         "total_revenue":round(total_revenue,2),
         "total_orders_counts": completed_orders
