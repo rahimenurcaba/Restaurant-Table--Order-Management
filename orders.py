@@ -40,9 +40,8 @@ def calculate_bill(order: dict, tax_rate: float, tip_rate: float) -> dict:
         subtotal += item["price"] * item["quantity"]
     
     tax_amount = subtotal * tax_rate
-    total = subtotal + tax_amount
-    tip_amount = total * tip_rate
-    final_total = total + tip_amount
+    tip_amount = subtotal * tip_rate  
+    final_total = subtotal + tax_amount + tip_amount
     
     return {
         "subtotal": round(subtotal, 2),
