@@ -43,13 +43,12 @@ def main():
             try:
                 t_num = int(input("Table Number: "))
                 p_size = int(input("Party Size: "))
-                result = tables.assign_table(table_list, t_num, p_size)
+                assigned_table = tables.assign_table(table_list, t_num, p_size)
                 
-                if result:
+                if assigned_table:
                     print(f"Success: Table {t_num} is now occupied by {p_size} people.")
-                    new_order=orders.open_order(t_num)
-                    order_list.append(new_order)
-                    storage.save_state(DATA_DIR, table_list, menu_data, order_list)
+                    server_name=input("Assign Server: ")
+                    tables.update_server(table_list,t_num,server_name)
                 else:
                     print("Error: Could not seat table. Check if occupied, too small, or invalid number.")
             except ValueError:
@@ -58,10 +57,18 @@ def main():
         elif choice == "3":
             try:
                 t_num = int(input("Table number to release: "))
-                confirm=input(f"Confirm releasing table {t_num}? This should only be used if the table is paid. (y/n):").lower()
-                if confirm == 'y':
+                order_to_close=None
+                for order in order_list:
+                    if order['table_number'] == t_num and order['status'] == 'open':
+                        order_to_close = order
+                        break
+                if order_to_close and 'bill' not in order to close:
+                    confirm=input(f"Confirm releasing table {t_num}? This should only be used if the table is paid. (y/n):").lower()
+                if confirm.lower() == 'y':
                     if tables.release_table(table_list, t_num):
                         print(f"Table {t_num} released.")
+                elif confirm.lower() != 'y:
+                    continue
                 else:
                     print("Table not found or already released.")
             except ValueError:
@@ -81,6 +88,13 @@ def main():
                     break
     
             if not current_order:
+                new_order=orders.open_order(t_num)
+                for t in table_list:
+                    if t['table_number'] == t_num:
+                        new_order['server_name'] = t.get('server_name', 'Unknown')
+                        break
+                        order_list.append(new_order)
+                        current order = new order
                 print(f"Error: No open order found for table {t_num}. Seat the table first (Option 2).")
                 continue
                 
@@ -154,6 +168,7 @@ def main():
             print("\n--- Menu Management ---")
             print("1. Add item")
             print("2. Update item")
+            print("3. Remove item")
             m_choice= input("Select: ")
             if m_choice=="1":
                 item_id=input("Id (e.g., M1) : ")
@@ -183,6 +198,12 @@ def main():
                 if updates:
                     menu.update_menu_item(menu_data, item_id, updates)
                     print("Item updated.")
+            elif m_choice == "3":
+                del_id=input("Enter ID of item to remove:")
+                if menu.remove_menu_item(menu_data,del_id):
+                    print("Item removed.")
+                else:
+                    print("Item ID not found.")
 
                 
         else:
