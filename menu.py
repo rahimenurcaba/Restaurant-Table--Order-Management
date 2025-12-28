@@ -36,11 +36,3 @@ def update_menu_item(menu: dict, item_id: str, updates: dict) -> dict:
                     item[key] = value
                 return menu
     return menu
-
-def filter_menu(menu: dict, category: str, vegetarian: bool | None = None) -> list:
-    results = []
-    if category in menu:
-        for item in menu[category]:
-            if vegetarian is None or item.get('vegetarian') == vegetarian:
-                results.append(item)
-    return results
