@@ -13,7 +13,7 @@ def get_int(prompt):
         try:
             return int(input(prompt))
         except ValueError:
-            print("Hata: Lütfen geçerli bir sayı girin!")
+            print("Error: Please enter a valid input.")
 
 DATA_DIR = "data"
 LOGS_DIR = "logs"
