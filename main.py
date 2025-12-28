@@ -100,12 +100,13 @@ def main():
                                 qty = int(input(f"Quantity for {found_item['name']}: "))
                                 orders.add_item_to_order(current_order, found_item, qty)
                                 print(f"Added {qty} x {found_item['name']}")
-                                storage.log_kitchen_ticket(current_order, "logs")
+                            
                             except ValueError:
                                 print("Invalid quantity.")
                         else:
                             print("Item not found.")
-                            
+                      storage.log_kitchen_ticket(current_order, "logs") 
+                      print("Kitchen ticket sent.")                         
             except ValueError:
                 print("Invalid Table Number.")
 
