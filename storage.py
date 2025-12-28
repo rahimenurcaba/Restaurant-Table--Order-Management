@@ -35,6 +35,29 @@ def load_state(data_dir: str) -> tuple[list, dict, list]:
 
     return table_list, menu_data, orders_list
 
+def save_receipt(order: dict, folder: str = "receipts") -> str:
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+        
+    filename = f"{folder}/receipt_{order['table_number']}_{datetime.datetime.now().strftime('%H%M%S')}.txt"
+    
+    with open(filename, 'w') as f:
+        f.write(f"--- RECEIPT Table {order['table_number']} ---\n")
+        f.write(f"Server: {order.get('server_name', 'Unknown')}\n")
+        f.write("-" * 30 + "\n")
+        
+        for item in order['items']:
+            f.write(f"{item['quantity']}x {item['name']} ... ${item['price'] * item['quantity']:.2f}\n")
+            
+        f.write("-" * 30 + "\n")
+        if 'bill' in order:
+            f.write(f"Subtotal: ${order['bill']['subtotal']:.2f}\n")
+            f.write(f"Tax:      ${order['bill']['tax_amount']:.2f}\n")
+            f.write(f"Total:    ${order['bill']['total']:.2f}\n")
+        else:
+            f.write("(Bill not yet calculated)\n")
+            
+    return filename
 
 def save_state(data_dir: str, tables: list, menu: dict, orders: list) -> None:
     if not os.path.exists(data_dir):
