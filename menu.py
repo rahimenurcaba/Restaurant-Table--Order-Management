@@ -19,6 +19,14 @@ def add_menu_item(menu: dict, item: dict) -> dict:
         
     menu[category].append(item)
     return menu
+    
+def remove_menu_item(menu: dict, item_id: str) -> bool:
+    for category, items in menu.items():
+        for i, item in enumerate(items):
+            if item['id'] == item_id:
+                del items[i]
+                return True
+    return False
 
 def update_menu_item(menu: dict, item_id: str, updates: dict) -> dict:
     for category, items_list in menu.items():
