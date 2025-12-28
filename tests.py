@@ -41,9 +41,9 @@ def test_invalid_item_removal():
         ]
     }
     
-    orders.remove_item_from_order(fake_order, "Pizza")
+    updated_order=orders.remove_item_from_order(fake_order, "Pizza")
     
-    if len(fake_order["items"]) == 1:
+    if len(updated_order["items"]) == 1:
         print("PASS: System handled invalid item removal gracefully.")
     else:
         print("FAIL: Order list was modified incorrectly.")
