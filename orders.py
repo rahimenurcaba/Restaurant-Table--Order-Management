@@ -1,9 +1,11 @@
+import datetime
 def open_order(table_number: int) -> dict:
     return {
         "table_number": table_number,
         "items": [],
         "status": "open",
         "total": 0.0
+        "date": datetime.date.today().isoformat()
     }
 
 def add_item_to_order(order: dict, menu_item: dict, quantity: int, note: str = "") -> dict:
