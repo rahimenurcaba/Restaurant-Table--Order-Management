@@ -126,7 +126,7 @@ def main():
             print("\n--- Menu Management ---")
             print("1. Add item")
             print("2. Update item")
-            m_choice= inout("Select: ")
+            m_choice= input("Select: ")
             if m_choice=="1":
                 name=input("İrem Name:")
                 price=float(input("Price:"))
@@ -135,7 +135,7 @@ def main():
                     "category":cat,
                     "name":name,
                     "price":price,
-                    "available": true}
+                    "available": "true"}
                 menu.add_menu_item(menu_data,new_item)
                 print("Item added.")
                 
