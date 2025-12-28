@@ -62,8 +62,13 @@ def main():
             else:
                 print("Table not found or already released.")
 
-        elif choice == "4":
-            t_num = int(input("Table Number for Order: "))
+         elif choice == "4":
+            try:
+                t_num = int(input("Table Number for Order: "))
+            except ValueError:
+                print("Invalid number.")
+                continue
+
             current_order = None
             for i in order_list:
                 if i['table_number'] == t_num and i['status'] == 'open':
@@ -71,17 +76,36 @@ def main():
                     break
     
             if not current_order:
-                print(f"Error: No open error found for table {t_num}. Seat the table first (Option 2).")
+                print(f"Error: No open order found for table {t_num}. Seat the table first (Option 2).")
                 continue
+                
+            print("\nAvailable Categories:", ", ".join(menu_data.keys()))
+            category = input("Enter Category: ").strip().lower()
 
-            item_name = input("Enter Menu Item Name: ")
-            qty = int(input("Quantity: "))
-            price = float(input("Price (Temporary): ")) 
-            temp_item = {"id": item_name[:3].upper(), "name": item_name, "price": price}
-            orders.add_item_to_order(current_order, temp_item, qty)
-            print(f"Item added to table {t_num}.")
-            result= storage.log_kitchen_ticket(current_order, LOGS_DIR)
-            print(f"Kitchen order ticket generated. ({result})")
+            if category in menu_data:
+                print(f"\n--- {category.capitalize()} ---")
+                for item in menu_data[category]:
+                    print(f"{item['id']}: {item['name']} (${item['price']})")
+                item_id = input("Enter Item ID: ")
+                selected_item = None
+                for item in menu_data[category]:
+                    if item['id'] == item_id:
+                        selected_item = item
+                        break
+                if selected_item:
+                    try:
+                        qty = int(input("Quantity: "))
+                        orders.add_item_to_order(current_order, selected_item, qty)
+                        print(f"Item added to table {t_num}.")
+                        result = storage.log_kitchen_ticket(current_order, LOGS_DIR)
+                        print(f"Kitchen order ticket generated. ({result})")
+                        storage.save_state(DATA_DIR, table_list, menu_data, order_list)
+                    except ValueError:
+                        print("Invalid quantity.")
+                else:
+                    print("Error: Item ID not found.")
+            else:
+                print("Error: Invalid category.")
 
         elif choice == "5":
             t_num = int(input("Table Number to Bill: "))
