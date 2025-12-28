@@ -8,6 +8,13 @@ import os
 import shutil
 import datetime
 
+def get_int(prompt):
+    while True:
+        try:
+            return int(input(prompt))
+        except ValueError:
+            print("Hata: Lütfen geçerli bir sayı girin!")
+
 DATA_DIR = "data"
 LOGS_DIR = "logs"
 BACKUP_DIR = "backups"
@@ -42,26 +49,29 @@ def main():
                 
                 print(f"Table {str(t['table_number']).ljust(3)} | Status: {status_display} | Server: {server_display}")
 
-        elif choice == "2":
+                elif choice == "2":
             try:
-                t_num = int(input("Table Number: "))
-                p_size = int(input("Party Size: "))
+                t_num = get_int(input("Table Number: "))
+                p_size = get_int(input("Party Size: "))
+                srv_name = input("Server Name: ") 
+                table = tables.assign_table(table_list, t_num, p_size)
                 
-                assigned_table = tables.assign_table(table_list, t_num, p_size)
-                
-                if assigned_table:
+                if table:
+                    tables.update_server(table_list, t_num, srv_name)
                     new_order = orders.open_order(t_num)
-                    new_order['server_name'] = assigned_table.get('server_name', 'Unknown')
+                    new_order['server_name'] = srv_name
                     order_list.append(new_order)
-                    print(f"Table {t_num} seated. Server: {assigned_table['server_name']}")
+                    
+                    print(f"Table {t_num} seated with {p_size} people. Server: {srv_name}")
                 else:
-                    print("Table cannot be assigned (occupied or too small).")
+                    print("Table not available or too small.")
             except ValueError:
-                print("Invalid input. Please enter numbers.")
+                print("Invalid input.")
+
 
         elif choice == "3":
             try:
-                t_num = int(input("Table Number to Release: "))
+                t_num = get_int(input("Table Number to Release: "))
                 success = tables.release_table(table_list, t_num)
                 if success:
                     print(f"Table {t_num} is now free.")
@@ -72,7 +82,7 @@ def main():
 
         elif choice == "4":
             try:
-                t_num = int(input("Table Number: "))
+                t_num = get_int(input("Table Number: "))
                 current_order = next((o for o in order_list if o['table_number'] == t_num and o['status'] == 'open'), None)
                 
                 if not current_order:
@@ -97,7 +107,7 @@ def main():
                         
                         if found_item:
                             try:
-                                qty = int(input(f"Quantity for {found_item['name']}: "))
+                                qty = get_int(input(f"Quantity for {found_item['name']}: "))
                                 orders.add_item_to_order(current_order, found_item, qty)
                                 print(f"Added {qty} x {found_item['name']}")
                             
@@ -112,7 +122,7 @@ def main():
 
         elif choice == "5":
             try:
-                t_num = int(input("Table Number to Calculate: "))
+                t_num = get_int(input("Table Number to Calculate: "))
                 order_to_close = next((o for o in order_list if o['table_number'] == t_num and o['status'] == 'open'), None)
                 
                 if order_to_close:
