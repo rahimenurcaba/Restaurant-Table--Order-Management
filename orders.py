@@ -4,7 +4,7 @@ def open_order(table_number: int) -> dict:
         "table_number": table_number,
         "items": [],
         "status": "open",
-        "total": 0.0
+        "total": 0.0,
         "date": datetime.date.today().isoformat()
     }
 
