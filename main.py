@@ -40,22 +40,18 @@ def main():
                 print(f"Table {str(t['table_number']).ljust(3)} | Status:{status_display} | Server:{server_display}")
 
         elif choice == "2":
-            t_num = int(input("Table Number: "))
-            p_size = int(input("Party Size: "))
-            result = tables.assign_table(table_list, t_num, p_size)
-            if result:
-                server_name = input("Assign Server: ")
-                tables.update_server(table_list, t_num, server_name)
-                server_name= 'Unassingned'
-                for t in table_list:
-                    if t['table_number'] == t_num:
-                        server_name=t['server_name']
-                        break
-                new_order = orders.open_order(t_num, server_name)
-                order_list.append(new_order)
-                print(f" Table {t_num} seated and order opened.")
-            else:
-                print("Cannot seat table.")
+            try:
+                t_num = int(input("Table Number: "))
+                p_size = int(input("Party Size: "))
+                result = tables.assign_table(table_list, t_num, p_size)
+                
+                if result:
+                    print(f"Success: Table {t_num} is now occupied by {p_size} people.")
+                    storage.save_state(DATA_DIR, table_list, menu_data, order_list)
+                else:
+                    print("Error: Could not seat table. Check if occupied, too small, or invalid number.")
+            except ValueError:
+                print("Error: Please enter valid numbers.")
 
         elif choice == "3":
             t_num = int(input("Table number to release: "))
