@@ -88,73 +88,133 @@ def main():
                     break
     
             if not current_order:
-                new_order=orders.open_order(t_num)
+                is_occupied = False
+                server_name = "Unknown"
+                
                 for t in table_list:
                     if t['table_number'] == t_num:
-                        new_order['server_name'] = t.get('server_name', 'Unknown')
+                        if t['status'] == 'occupied':
+                            is_occupied = True
+                            server_name = t.get('server_name', 'Unknown')
                         break
-                        order_list.append(new_order)
-                        current order = new order
-                print(f"Error: No open order found for table {t_num}. Seat the table first (Option 2).")
-                continue
                 
-            print("\nAvailable Categories:", ", ".join(menu_data.keys()))
-            category = input("Enter Category: ").strip().lower()
-
-            if category in menu_data:
-                print(f"\n--- {category.capitalize()} ---")
-                for item in menu_data[category]:
-                    print(f"{item['id']}: {item['name']} (${item['price']})")
-                item_id = input("Enter Item ID: ")
-                selected_item = None
-                for item in menu_data[category]:
-                    if item['id'] == item_id:
-                        selected_item = item
-                        break
-                if selected_item:
-                    try:
-                        if not selected_item.get("available", True):
-                            print("Sorry, this item is currently unavailable.")
-                        else:
-                            qty = int(input("Quantity: "))
-                            orders.add_item_to_order(current_order, selected_item, qty)
-                            print(f"Item added to table {t_num}.")
-                            result = storage.log_kitchen_ticket(current_order, LOGS_DIR)
-                            print(f"Kitchen order ticket generated. ({result})")
-                            storage.save_state(DATA_DIR, table_list, menu_data, order_list)
-                    except ValueError:
-                        print("Invalid quantity.")
+                if is_occupied:
+                    new_order = orders.open_order(t_num)
+                    new_order['server_name'] = server_name 
+                    order_list.append(new_order)
+                    current_order = new_order
+                    print(f"New order created for Table {t_num} (Server: {server_name}).")
                 else:
-                    print("Error: Item ID not found.")
-            else:
-                print("Error: Invalid category.")
+                    print(f"Error: Table {t_num} is not seated. Please use Option 2 first.")
+                    continue
+            while True:
+                print(f"\n--- Order Management (Table {t_num}) ---")
+                print("1. Add Item")
+                print("2. Void/Remove Item")
+                print("3. Done (Return to Main Menu)")
+                sub_choice = input("Select: ")
+
+                if sub_choice == "1":
+                    print("\nAvailable Categories:", ", ".join(menu_data.keys()))
+                    category = input("Enter Category: ").strip().lower()
+
+                    if category in menu_data:
+                        print(f"\n--- {category.capitalize()} ---")
+                        for item in menu_data[category]:
+                            status = "" if item.get("available", True) else "(SOLD OUT)"
+                            print(f"{item['id']}: {item['name']} (${item['price']}) {status}")
+                        
+                        item_id = input("Enter Item ID: ")
+                        selected_item = None
+                        for item in menu_data[category]:
+                            if item['id'] == item_id:
+                                selected_item = item
+                                break
+                        
+                        if selected_item:
+                            try:
+                                if not selected_item.get("available", True):
+                                    print("Sorry, this item is currently unavailable.")
+                                else:
+                                    qty = int(input("Quantity: "))
+                                    orders.add_item_to_order(current_order, selected_item, qty)
+                                    print(f"{qty}x {selected_item['name']} added.")
+                                    result = storage.log_kitchen_ticket(current_order, LOGS_DIR)
+                                    print(f"Ticket updated: {result}")
+                                    storage.save_state(DATA_DIR, table_list, menu_data, order_list)
+                            except ValueError:
+                                print("Invalid quantity.")
+                        else:
+                            print("Error: Item ID not found.")
+                    else:
+                        print("Error: Invalid category.")
+
+                elif sub_choice == "2":
+                    print("\nCurrent Items:")
+                    for item in current_order['items']:
+                        print(f"- {item['name']} (Qty: {item['quantity']})")
+                    
+                    rem_name = input("Enter exact name of item to remove: ")
+                    orders.remove_item_from_order(current_order, rem_name)
+                    print("Item removed (if it existed).")
+                    storage.save_state(DATA_DIR, table_list, menu_data, order_list)
+
+                elif sub_choice == "3":
+                    break
 
         elif choice == "5":
             try:
                 t_num = int(input("Table Number: "))
-            except ValueError:
-                continue
+                current_order = None
+                for order in order_list:
+                    if order['table_number'] == t_num and order['status'] == 'open':
+                        current_order = order
+                        break
+                
+                if current_order:
+                    print(f"\n--- Bill Options for Table {t_num} ---")
+                    print("1. Standard Bill (Single Receipt)")
+                    print("2. Split Bill (Split Evenly)")
+                    bill_choice = input("Select Bill Type: ")
 
-            current_order = next((o for o in order_list if o['table_number'] == t_num and o['status'] == 'open'), None)
+                    tax_rate = 0.10
+                    tip_rate = 0.15
+
+                    if bill_choice == "1":
+                        bill = orders.calculate_bill(current_order, tax_rate, tip_rate)
+                        current_order['bill'] = bill
+                        
+                        print("\n" + "-"*30)
+                        print(f"Subtotal: ${bill['subtotal']:.2f}")
+                        print(f"Tax:      ${bill['tax_amount']:.2f}")
+                        print(f"Tip:      ${bill['tip_amount']:.2f}")
+                        print(f"TOTAL:    ${bill['total']:.2f}")
+                        print("-" * 30)
+                        
+                        receipt_file = storage.save_receipt(current_order)
+                        print(f"Receipt saved to: {receipt_file}")
+
+                    elif bill_choice == "2":
+                        try:
+                            splits = int(input("How many ways to split? "))
+                            split_data = orders.split_bill(current_order, "even", splits, tax_rate, tip_rate)
+                            print(f"\n--- Split Breakdown ({splits} ways) ---")
+                            for p in split_data:
+                                print(f"Person {p['party_id']}: ${p['amount_due']:.2f}")
+                            full_bill = orders.calculate_bill(current_order, tax_rate, tip_rate)
+                            current_order['bill'] = full_bill
+                            receipt_file = storage.save_receipt(current_order) 
+                            print(f"Master Receipt saved to: {receipt_file}")
+                            
+                        except ValueError:
+                            print("Error: Invalid number for split.")
+
+                else:
+                    print("Error: No open order found for this table.")
             
-            if current_order:
-                bill = orders.calculate_bill(current_order, tax_rate=0.10, tip_rate=0.10)
-                
-                print("\n--- BILL ---")
-                print(f"Subtotal: ${bill['subtotal']:.2f}")
-                print(f"Tax:      ${bill['tax']:.2f}")
-                print(f"Tip:      ${bill['tip']:.2f}")
-                print(f"TOTAL:    ${bill['total']:.2f}")
-                action = input("\nType 'pay' to close this order, or Enter to go back: ")
-                
-                if action.lower() == 'pay':
-                    current_order['status'] = 'closed'
-                    current_order['bill'] = bill  
-                    tables.release_table(table_list, t_num)
-                    storage.save_state(DATA_DIR, table_list, menu_data, order_list)
-                    print(f"Order for Table {t_num} closed and paid.")
-            else:
-                print("No open order for this table.")
+            except ValueError:
+                print("Error: Invalid table number.")
+
 
         elif choice == "6":
             manager_tools(order_list,menu_data)
