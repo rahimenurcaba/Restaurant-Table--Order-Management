@@ -47,7 +47,7 @@ def main():
                 
                 if result:
                     print(f"Success: Table {t_num} is now occupied by {p_size} people.")
-                    new_order=prders.open_order(t_num)
+                    new_order=orders.open_order(t_num)
                     order_list.append(new_order)
                     storage.save_state(DATA_DIR, table_list, menu_data, order_list)
                 else:
@@ -150,14 +150,16 @@ def main():
             print("2. Update item")
             m_choice= input("Select: ")
             if m_choice=="1":
-                name=input("Id Name:")
+                item_id=input("Id (e.g., M1) : ")
+                name=input("Item Name:")
                 price=float(input("Price:"))
-                cat=input("Category")
+                cat=input("Category:a)
                 new_item={
+                    "id" : item_id,
                     "category":cat,
                     "name":name,
                     "price":price,
-                    "available": "true"}
+                    "available": True}
                 menu.add_menu_item(menu_data,new_item)
                 print("Item added.")
                 
