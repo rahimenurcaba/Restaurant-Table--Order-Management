@@ -4,41 +4,37 @@ import shutil
 import datetime
 
 def load_state(data_dir: str) -> tuple[list, dict, list]:
-    table_file= os.path.join(data_dir,"tables.json") 
-    menu_file = os.path.join(data_dir,"menu.json")
-    orders_file = os.path.join(data_dir,"orders.json")
-
+    table_file = os.path.join(data_dir, "tables.json")
+    menu_file = os.path.join(data_dir, "menu.json")
+    orders_file = os.path.join(data_dir, "orders.json")
+    
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
+
     try:
-       with open(table_file, 'r') as f:
-           table_list = json.load(f)
-    except FileNotFoundError:
-        print(f"Error: {table_file} not found.")
-        table_list = []  
-    except json.JSONDecodeError:
-        print(f"Error: {table_file} contains invalid JSON.")
-        table_list = []  
+        with open(table_file, 'r') as f:
+            data = json.load(f)
+            if isinstance(data, dict) and "tables" in data:
+                table_list = data["tables"]
+            else:
+                table_list = data
+    except (FileNotFoundError, json.JSONDecodeError):
+        table_list = []
+
     try:
         with open(menu_file, 'r') as f:
-            menu_data= json.load(f)
-    except FileNotFoundError:
-        print(f"Error: {menu_file} not found.")
-        menu_data = []  
-    except json.JSONDecodeError:
-        print(f"Error: {menu_file} contains invalid JSON.")
-        menu_data = []  
+            menu_data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        menu_data = {}
+
     try:
         with open(orders_file, 'r') as f:
             orders_list = json.load(f)
-    except FileNotFoundError:
-        print(f"Error: {orders_file} not found.")
-        orders_list = []  
-    except json.JSONDecodeError:
-        print(f"Error: {table_file} contains invalid JSON.")
-        orders_list = []  
-    
+    except (FileNotFoundError, json.JSONDecodeError):
+        orders_list = []
+
     return table_list, menu_data, orders_list
+
 
 def save_state(data_dir: str, tables: list, menu: dict, orders: list) -> None:
     if not os.path.exists(data_dir):
