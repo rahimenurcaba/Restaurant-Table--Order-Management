@@ -49,6 +49,7 @@ def main():
                     print(f"Success: Table {t_num} is now occupied by {p_size} people.")
                     server_name=input("Assign Server: ")
                     tables.update_server(table_list,t_num,server_name)
+                    storage.save_state(DATA_DIR, table_list, menu_data, order_list)
                 else:
                     print("Error: Could not seat table. Check if occupied, too small, or invalid number.")
             except ValueError:
@@ -67,6 +68,7 @@ def main():
                 if confirm.lower() == 'y':
                     if tables.release_table(table_list, t_num):
                         print(f"Table {t_num} released.")
+                        storage.save_state(DATA_DIR, table_list, menu_data, order_list)
                 elif confirm.lower() != 'y:
                     continue
                 else:
@@ -193,6 +195,7 @@ def main():
                         
                         receipt_file = storage.save_receipt(current_order)
                         print(f"Receipt saved to: {receipt_file}")
+                        storage.save_state(DATA_DIR, table_list, menu_data, order_list)
 
                     elif bill_choice == "2":
                         try:
@@ -205,6 +208,7 @@ def main():
                             current_order['bill'] = full_bill
                             receipt_file = storage.save_receipt(current_order) 
                             print(f"Master Receipt saved to: {receipt_file}")
+                            storage.save_state(DATA_DIR, table_list, menu_data, order_list)
                             
                         except ValueError:
                             print("Error: Invalid number for split.")
@@ -232,6 +236,15 @@ def main():
             m_choice= input("Select: ")
             if m_choice=="1":
                 item_id=input("Id (e.g., M1) : ")
+                exists=False
+                for cat=_items in menu_data.values():
+                    for item in cat_items:
+                        if item['id'] == item_id:
+                            exists = True
+                            break
+                if exists:
+                    print("Error: Item ID already exists! Try again.")
+                    continue
                 name=input("Item Name:")
                 price=float(input("Price:"))
                 cat=input("Category:a)
@@ -243,6 +256,8 @@ def main():
                     "available": True}
                 menu.add_menu_item(menu_data,new_item)
                 print(f"Item '{name}' added with ID '{item_id}' to category '{cat}'.")
+                storage.save_state(DATA_DIR, table_list, menu_data, order_list)
+            
             elif m_choice == "2":
                 item_id = input("Enter ID of item to update: ")
                 print("Leave field blank to keep current value.")
@@ -258,10 +273,13 @@ def main():
                 if updates:
                     menu.update_menu_item(menu_data, item_id, updates)
                     print("Item updated.")
+                    storage.save_state(DATA_DIR, table_list, menu_data, order_list)
+            
             elif m_choice == "3":
                 del_id=input("Enter ID of item to remove:")
                 if menu.remove_menu_item(menu_data,del_id):
                     print("Item removed.")
+                    storage.save_state(DATA_DIR, table_list, menu_data, order_list)
                 else:
                     print("Item ID not found.")
 
