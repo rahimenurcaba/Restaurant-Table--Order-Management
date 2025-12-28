@@ -117,15 +117,10 @@ def main():
                 if order_to_close:
                     print("\n--- Bill Calculation ---")
                     print(f"Total Items: {len(order_to_close['items'])}")
-                    
-                    if 'bill' not in order_to_close:
                         bill = orders.calculate_bill(order_to_close, tax_rate=0.10, tip_rate=0.10)
                         order_to_close['bill'] = bill
                         print(f"Total Amount: ${bill.get('total', 0):.2f}")
-                    else:
-                        print(f"Bill already calculated: ${order_to_close['bill'].get('total', 0):.2f}")
-                    
-                    confirm = input("Process Payment & Close Order? (y/n): ")
+                        confirm = input("Process Payment & Close Order? (y/n): ")
                     if confirm.lower() == 'y':
                         order_to_close['status'] = 'closed'
                         storage.save_receipt(order_to_close)
