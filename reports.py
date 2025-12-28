@@ -2,12 +2,12 @@ import csv
 import operator
 
 def daily_sales_report(orders: list) -> dict:
-    total_revenue=0.0
-    completed_orders=0
+    total_revenue= 0.0
+    completed_orders= 0
     for order in orders:
         if order.get("status")=="closed" and "bill" in order:
             bill =order["bill"]
-            final_total=bill.get("final_total",0.0)
+            final_total=bill.get("total",0.0)
             total_revenue += final_total
             completed_orders +=1
     return{
@@ -54,12 +54,11 @@ def server_performance(orders: list) -> dict:
     for order in orders:
         if order.get("status")=="closed":
             server_name=order.get("server_name") 
-            if not server_name:
-                continue
+            if not server_name:continue
             if server not in performance:
                 performance[server_name]= {"tables_served":0, "total_sales":0.0}
             bill = order.get("bill",{})
-            total = bill.get("final_total", 0.0)
+            total = bill.get("total", 0.0)
             performance[server_name]["tables_served"] +=1
             performance[server_name]["total_sales"] += total
             
