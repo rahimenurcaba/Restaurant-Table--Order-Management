@@ -75,11 +75,18 @@ def split_bill(order: dict, method: str, parties: int | list) -> list:
     elif method == "itemized":
         if isinstance(parties, list):
             split_bills = []
+            available_items=list(order["items"])
             for i, party_items_ids in enumerate(parties):
                 party_subtotal = 0.0
-                for item in order["items"]:                
-                    if item.get("id") in party_items_ids or item.get("name") in party_items_ids:
-                        party_subtotal += item["price"] * item["quantity"]
+                for wanted_item_id in party_items_ids:
+                    found_item=None
+                    for item in available_items:
+                        if item.get("id") == wanted_item_id or item.get("name")==wanted_item_id:
+                            found_item = item
+                            break
+                    if found_item:
+                        party_subtoral += found_item["price"]* found_item["quantity"]
+available_items.remove(found_item)
                 
                 party_tax = party_subtotal * tax_rate
                 party_total = party_subtotal + party_tax
