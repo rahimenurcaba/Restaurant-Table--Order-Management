@@ -47,6 +47,8 @@ def main():
                 
                 if result:
                     print(f"Success: Table {t_num} is now occupied by {p_size} people.")
+                    new_order=prders.open_order(t_num)
+                    order_list.append(new_order)
                     storage.save_state(DATA_DIR, table_list, menu_data, order_list)
                 else:
                     print("Error: Could not seat table. Check if occupied, too small, or invalid number.")
@@ -55,14 +57,14 @@ def main():
 
         elif choice == "3":
             t_num = int(input("Table number to release: "))
-            confirm=input("Confirm releasing table {t_num}? This should only be used if the table is paid. (y/n):").lower()
+            confirm=input(f"Confirm releasing table {t_num}? This should only be used if the table is paid. (y/n):").lower()
             if confirm == 'y':
                 if tables.release_table(table_list, t_num):
-                    print("Table {t_num} released.")
+                    print(f"Table {t_num} released.")
             else:
                 print("Table not found or already released.")
 
-         elif choice == "4":
+        elif choice == "4":
             try:
                 t_num = int(input("Table Number for Order: "))
             except ValueError:
@@ -148,7 +150,7 @@ def main():
             print("2. Update item")
             m_choice= input("Select: ")
             if m_choice=="1":
-                name=input("İrem Name:")
+                name=input("Id Name:")
                 price=float(input("Price:"))
                 cat=input("Category")
                 new_item={
@@ -195,7 +197,7 @@ def manager_tools(order_list,menu_data):
             print(f"Server{server_name.ljust(10)} | Served:{data['tables_served']} | Total Sales:${data['total_sales']:.2f}")
         
     if mgr_choice == "4":
-        result=storage.backup.day(DATA_DIR, BACKUP_DIR)
+        result=storage.backup_day(DATA_DIR, BACKUP_DIR)
         print(result)
         
     else:
