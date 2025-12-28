@@ -74,3 +74,4 @@ def log_kitchen_ticket(order: dict, directory: str) -> str:
         
         for item in order['items']:
             f.write(f"- {item['quantity']}x {item['name']} ({item.get('note', '')})\n")
+    return filename
