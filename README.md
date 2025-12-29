@@ -1,4 +1,4 @@
-# Restaurant Table & Order Manager 
+# Restaurant Table & Order Management
 
 ## Project Overview
 This project is a terminal-based Point of Sale (POS) system designed to help restaurant staff manage dining room operations. It handles table assignments, order tracking, bill calculation (including complex splitting), menu management, and sales reporting. The system ensures data persistence using JSON files and includes security features for manager tasks.
