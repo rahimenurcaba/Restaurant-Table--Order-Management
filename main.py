@@ -13,6 +13,10 @@ DATA_DIR = "data"
 LOGS_DIR = "logs"
 BACKUP_DIR = "backups"
 
+# --- MANAGER CREDENTIALS ---
+MANAGER_USERNAME = "admin"
+MANAGER_PASSWORD = "1234"
+
 def get_int(prompt):
     """
     Helper to get an integer from user.
@@ -34,11 +38,30 @@ def autosave(table_list, menu_data, order_list):
     """Saves data immediately to prevent data loss on crash."""
     storage.save_state(DATA_DIR, table_list, menu_data, order_list)
 
+def manager_login():
+    """
+    Asks for username/password. Returns True if correct, False otherwise.
+    """
+    print("\n--- SECURITY CHECK (Type 'b' to cancel) ---")
+    user = input("Username: ").strip()
+    if user.lower() == 'b':
+        return False
+    
+    pwd = input("Password: ").strip()
+    
+    if user == MANAGER_USERNAME and pwd == MANAGER_PASSWORD:
+        print(">> Access Granted.")
+        return True
+    else:
+        print("!! Access Denied: Wrong Credentials !!")
+        return False
+
 def main():
     # 1. Setup Directories & Load Data
     if not os.path.exists(LOGS_DIR): os.makedirs(LOGS_DIR)
     if not os.path.exists(BACKUP_DIR): os.makedirs(BACKUP_DIR)
     
+    # Load all data from the other files
     table_list, menu_data, order_list = storage.load_state(DATA_DIR)
 
     while True:
@@ -47,10 +70,10 @@ def main():
         print("2. Seat Table")
         print("3. Release Table")
         print("4. Place Order")
-        print("5. Calculate Bill & Close")
-        print("6. Manager Tools")
+        print("5. Calculate & Split Bill") 
+        print("6. Manager Tools (LOCKED)")
         print("7. Manual Save & Exit")
-        print("8. Menu Management")
+        print("8. Menu Management (LOCKED)")
         
         choice = input("Select option: ").strip()
 
@@ -60,10 +83,9 @@ def main():
             for t in table_list:
                 status = t['status'].upper()
                 srv = t.get('server_name') or "None"
-                # Simple formatting
                 print(f"Table {t['table_number']} | Size: {t['capacity']} | {status} | Server: {srv}")
 
-        # --- OPTION 2: SEAT TABLE (With Back Button) ---
+        # --- OPTION 2: SEAT TABLE ---
         elif choice == "2":
             print("\n--- Seat Table (Type 'b' to go back) ---")
             
@@ -87,13 +109,13 @@ def main():
                     order_list.append(new_order)
                     
                     print(f"Table {t_num} seated. Server: {srv_name}")
-                    autosave(table_list, menu_data, order_list) # AUTO-SAVE
+                    autosave(table_list, menu_data, order_list)
                 else:
                     print("Table not available or capacity too small.")
             except Exception as e:
                 print(f"Error: {e}")
 
-        # --- OPTION 3: RELEASE TABLE (With Zombie Check) ---
+        # --- OPTION 3: RELEASE TABLE ---
         elif choice == "3":
             t_num = get_int("Table Number to Release: ")
             if t_num is None: continue
@@ -103,19 +125,18 @@ def main():
             
             if open_order:
                 print(f"\n!!! WARNING: Table {t_num} has an UNPAID BILL !!!")
-                print("If you release it now, the order will remain 'open' forever (Zombie Order).")
-                confirm = input("Are you sure? (y/n): ").lower()
+                confirm = input("Are you sure you want to release it? (y/n): ").lower()
                 if confirm != 'y':
-                    print("Release cancelled. Go to Option 5 to pay first.")
+                    print("Cancelled. Go to Option 5 to pay first.")
                     continue
 
             if tables.release_table(table_list, t_num):
                 print(f"Table {t_num} released.")
-                autosave(table_list, menu_data, order_list) # AUTO-SAVE
+                autosave(table_list, menu_data, order_list)
             else:
                 print("Table not found.")
 
-        # --- OPTION 4 ---
+        # --- OPTION 4: PLACE ORDER ---
         elif choice == "4":
             t_num = get_int("Table Number: ")
             if t_num is None: continue
@@ -126,7 +147,7 @@ def main():
             if not current_order:
                 print("No open order for this table. Seat it first (Option 2).")
             else:
-                # 1. SHOW THE MENU 
+                # 1. SHOW THE MENU
                 print("\n" + "="*30)
                 print("         CURRENT MENU")
                 print("="*30)
@@ -137,7 +158,7 @@ def main():
                             print(f"[{item['id']}] {item['name']} - ${item['price']}")
                 print("="*30)
 
-                # 2. Loop for adding items
+                # 2. Add Items Loop
                 while True:
                     user_in = input("\nEnter Item ID or Name (or 'done' to finish): ").strip()
                     
@@ -148,7 +169,6 @@ def main():
                     found_item = None
                     for cat_items in menu_data.values():
                         for item in cat_items:
-                            # Compare ID and Name in lowercase
                             if (item['id'].lower() == user_in.lower() or 
                                 item['name'].lower() == user_in.lower()):
                                 found_item = item
@@ -157,25 +177,22 @@ def main():
                     
                     if found_item:
                         qty = get_int(f"Quantity for {found_item['name']}: ")
-                        if qty is None: continue # User cancelled quantity input
+                        if qty is None: continue
                         
                         orders.add_item_to_order(current_order, found_item, qty)
                         print(f"--> Added {qty} x {found_item['name']}")
                     else:
                         print("Item not found. Try again.")
 
-                # End of ordering for this table
                 storage.log_kitchen_ticket(current_order, LOGS_DIR) 
                 print("Kitchen ticket sent.")
-                autosave(table_list, menu_data, order_list) # AUTO-SAVE
+                autosave(table_list, menu_data, order_list)
 
-        # --- OPTION 5: CALCULATE & PAY ---
-        # --- OPTION 5: CALCULATE, SPLIT & PAY ---
+        # --- OPTION 5: CALCULATE & SPLIT ---
         elif choice == "5":
             t_num = get_int("Table Number: ")
             if t_num is None: continue
 
-            # Find the open order for this table
             order_to_close = next((o for o in order_list if o['table_number'] == t_num and o['status'] == 'open'), None)
             
             if order_to_close:
@@ -189,55 +206,45 @@ def main():
                 
                 pay_method = input("Select method: ").strip()
                 
-                # --- A. SPLIT EQUALLY ---
+                # A. SPLIT EQUALLY
                 if pay_method == "2":
                     num_people = get_int("How many people? ")
                     if num_people:
-                        # Call the split function from orders.py
                         splits = orders.calculate_split_bill(order_to_close, "equal", 0.10, 0.10, parties=num_people)
-                        
                         print("\n--- EQUAL SPLIT BREAKDOWN ---")
                         for p in splits:
                             print(f"Person {p['party_id']}: ${p['total_bill']:.2f}")
-                            
-                        print(f"\nTotal Collected: ${sum(p['total_bill'] for p in splits):.2f}")
 
-                # --- B. SPLIT BY ITEM ---
+                # B. SPLIT BY ITEM
                 elif pay_method == "3":
                     num_people = get_int("How many people? ")
                     if num_people:
-                        # 1. Show available items to help user choose
                         print("\n--- Order Items ---")
                         for item in order_to_close['items']:
                             print(f"- {item['name']} (${item['price']})")
                         
                         party_selections = []
-                        print("\n(Type exact item names, comma separated)")
+                        print("\n(Type exact item names, comma separated. Example: Soup, Cola)")
                         
-                        # 2. Loop through each person to get their items
                         for i in range(1, num_people + 1):
                             raw_input = input(f"Items for Person {i}: ")
-                            # Clean up input: split by comma, strip spaces
                             person_items = [x.strip() for x in raw_input.split(',')]
                             party_selections.append(person_items)
                         
-                        # 3. Calculate Itemized Split
                         try:
                             splits = orders.calculate_split_bill(order_to_close, "itemized", 0.10, 0.10, parties=party_selections)
                             print("\n--- ITEMIZED SPLIT BREAKDOWN ---")
                             for p in splits:
-                                print(f"Person {p['party_id']}: ${p['total_bill']:.2f} (Subtotal: ${p['subtotal']:.2f})")
+                                print(f"Person {p['party_id']}: ${p['total_bill']:.2f}")
                         except Exception as e:
                             print(f"Error calculating split: {e}")
 
-                # --- C. FINAL PAYMENT & CLOSING ---
-                # Regardless of split, we calculate the Master Bill for the records
+                # C. FINAL PAYMENT
                 master_bill = orders.calculate_bill(order_to_close, tax_rate=0.10, tip_rate=0.10)
-                print(f"\n>> GRAND TOTAL: ${master_bill['total']:.2f}")
+                print(f"\n>> GRAND TOTAL TO PAY: ${master_bill['total']:.2f}")
                 
                 confirm = input("Mark Order as PAID and Close? (y/n): ").lower()
                 if confirm == 'y':
-                    # Save the master bill to the order so Reports work correctly
                     order_to_close['bill'] = master_bill 
                     order_to_close['status'] = 'closed'
                     
@@ -253,9 +260,11 @@ def main():
             else:
                 print("No open order found.")
 
-        
-        # --- OPTION 6: REPORTS ---
+        # --- OPTION 6: REPORTS (PROTECTED) ---
         elif choice == "6":
+            if not manager_login():
+                continue # Skip the rest of this block if login fails
+
             print("\n--- Manager Tools ---")
             print("1. Daily Sales")
             print("2. Top Items")
@@ -290,10 +299,12 @@ def main():
             print("Data saved. Goodbye!")
             break
 
-        # --- OPTION 8: MENU MANAGER ---
+        # --- OPTION 8: MENU MANAGER (PROTECTED) ---
         elif choice == "8":
+            if not manager_login():
+                continue # Skip if login fails
+
             print("\n--- Menu Management ---")
-            # Reuse logic to show menu
             for cat, items in menu_data.items():
                 print(f"--- {cat.upper()} ---")
                 for item in items:
@@ -304,7 +315,6 @@ def main():
             if action == 'a':
                 cat = input("Category: ").lower()
                 name = input("Name: ")
-                # Simple unique ID generation if user doesn't want to think of one
                 item_id = input("ID: ").strip()
                 try:
                     price = float(input("Price: "))
